@@ -1,4 +1,5 @@
 using System.Linq;
+using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Todo.Data.Entities;
 using Todo.EntityModelMappers.TodoItems;
@@ -24,22 +25,46 @@ namespace Todo.Tests
             resultFields = TodoItemEditFieldsFactory.Create(srcTodoItem);
         }
 
-        [Fact]
+        [Fact (DisplayName = "TodoItemEditFields.TodoListId should match the source TodoItem TodoListId")]
         public void EqualTodoListId()
         {
-            Assert.Equal(srcTodoItem.TodoListId, resultFields.TodoListId);
+            resultFields.TodoListId.Should().Be(srcTodoItem.TodoListId);
         }
 
-        [Fact]
+        [Fact (DisplayName = "TodoItemEditFields.Title should match the source TodoItem Title")]
         public void EqualTitle()
         {
-            Assert.Equal(srcTodoItem.Title, resultFields.Title);
+            resultFields.Title.Should().Be(srcTodoItem.Title);
         }
 
-        [Fact]
+        [Fact (DisplayName = "TodoItemEditFields.Importance should match the source TodoItem Importance")]
         public void EqualImportance()
         {
-            Assert.Equal(srcTodoItem.Importance, resultFields.Importance);
+            resultFields.Importance.Should().Be(srcTodoItem.Importance);
+        }
+
+        [Fact(DisplayName = "TodoItemEditFields.TodoListTitle should match the source TodoList Title")]
+        public void EqualTodoListTitle()
+        {
+            resultFields.TodoListTitle.Should().Be(srcTodoItem.TodoList.Title);
+        }
+
+        [Fact(DisplayName = "TodoItemEditFields.TodoItemId should match the source TodoItem Id")]
+        public void EqualTodoItemId()
+        {
+            resultFields.TodoItemId.Should().Be(srcTodoItem.TodoItemId);
+        }
+
+        [Fact(DisplayName = "TodoItemEditFields.ResponsiblePartyId should match the source TodoItem ResponsiblePartyId")]
+        public void EqualResponsiblePartyId()
+        {
+            resultFields.ResponsiblePartyId.Should().Be(srcTodoItem.ResponsiblePartyId);
+        }
+
+        [Fact(DisplayName = "TodoItemEditFields.IsDone should be false")]
+        public void FalseIsDone()
+        {
+            resultFields.IsDone.Should().BeFalse();
         }
     }
 }
