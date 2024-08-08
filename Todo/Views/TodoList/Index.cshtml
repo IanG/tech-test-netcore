@@ -7,15 +7,20 @@
 <h2>@ViewData["Title"]</h2>
 
 <div class="col-md-6">
-    <ul class="list-group">
+    <div style="padding-bottom: 10px">
+        <p>Your lists:</p>
+    </div>
 
-        <li class="list-group-item">
-            <a asp-action="Create">
+    <div class="todo-list-action" style="padding-bottom: 20px">
+        <div class="todo-list-action">
+            <a asp-action="Create" class="btn btn-primary">
                 <strong>Add New List</strong>
             </a>
-        </li>
-
-        @foreach (var list in Model.Lists)
+        </div>
+    </div>
+    
+    <ul class="list-group">
+        @foreach (var list in Model.Lists.Where(list => list.Owner.UserName == User.Identity?.Name))
         {
             <li class="list-group-item">
                 @if (list.NumberOfNotDoneItems == 0)
@@ -32,4 +37,32 @@
             </li>
         }
     </ul>
+
+    @if (Model.Lists.Any(list => list.Owner.UserName != User.Identity?.Name))
+    {
+        <div style="padding-top: 10px; padding-bottom: 10px">
+            <p>Other users lists that have tasks assigned to you:</p>
+        </div>
+
+        <ul class="list-group">
+
+            @foreach (var list in Model.Lists.Where(list => list.Owner.UserName != User.Identity?.Name))
+            {
+                <li class="list-group-item">
+                    @if (list.NumberOfNotDoneItems == 0)
+                    {
+                        <s>
+                            <a asp-action="Detail" asp-route-todoListId="@list.TodoListId">@list.Title</a>
+                        </s>
+                    }
+                    else
+                    {
+                        string todoListDescription = $"{list.Title} (owned by {list.Owner.UserName})";
+                        <span class="badge">@list.NumberOfNotDoneItems</span>
+                        <a asp-action="Detail" asp-route-todoListId="@list.TodoListId">@todoListDescription</a>
+                    }
+                </li>
+            }
+        </ul>
+    }
 </div>
