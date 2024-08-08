@@ -35,3 +35,17 @@ body {
         display: none;
     }
 }
+
+.todo-list-actions {
+    padding-bottom: 20px;
+}
+
+.todo-list-actions .todo-list-action {
+    display:inline-block;
+}
+
+.todo-list-actions .todo-list-hide-action {
+    display:inline-block; 
+    float: right; 
+    padding-top: 5px;
+}

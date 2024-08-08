@@ -7,18 +7,30 @@
     ViewData["Title"] = $"List: {Model.Title}";
 }
 
+<script>
+    function toggleCompletedItems(checkCtrl)
+    {
+        document.getElementById("todoListItems").querySelectorAll("li.todo-list-item-completed").forEach((li) => {
+            li.style.display = checkCtrl.checked ? "None" : "";
+        });
+    }
+</script>
+
 <h2>@ViewData["Title"]</h2>
 
 <div class="col-md-6">
+    
+    <div class="todo-list-actions">
+        <div class="todo-list-action">
+            <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId" class="btn btn-primary">Add New Item</a>
+        </div>
+        <div class="todo-list-hide-action">
+            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onclick="toggleCompletedItems(this)"/>
+            <label class="form-check-label" for="flexSwitchCheckDefault" title="Hide all the completed items in this list">Hide Completed Items</label>
+        </div>
+    </div>
 
-    <ul class="list-group">
-
-        <li class="list-group-item">
-            <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
-                <strong>Add New Item</strong>
-            </a>
-        </li>
-
+    <ul class="list-group" id="todoListItems">
         @foreach (var item in Model.Items.OrderBy(item => item.Importance).ThenBy(item => item.TodoItemId))
         {
             string contextualClass;
@@ -35,8 +47,10 @@
                     break;
             }
 
-            <li class="list-group-item @contextualClass">
-                
+            string todoListItemClass = "todo-list-item" + (item.IsDone ? "-completed" : "");
+
+            <li class="list-group-item @todoListItemClass @contextualClass">
+
                 <div class="row">
 
                     <div class="col-md-8">
