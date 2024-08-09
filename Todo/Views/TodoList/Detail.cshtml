@@ -1,5 +1,4 @@
-﻿@using Todo.Controllers
-@using Todo.Data.Entities
+﻿@using Todo.Data.Entities
 @using Todo.Services
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
 
@@ -10,9 +9,16 @@
 <script>
     function toggleCompletedItems(checkCtrl)
     {
-        document.getElementById("todoListItems").querySelectorAll("li.todo-list-item-completed").forEach((li) => {
-            li.style.display = checkCtrl.checked ? "None" : "";
+        document.getElementById("todoListItems").querySelectorAll("li").forEach((li) => {
+            li.style.display = checkCtrl.checked && li.dataset.isDone === "True" ? "None" : "";
         });
+    }
+
+    function orderByRank(sortAscending)
+    {
+        Array.from(document.getElementById("todoListItems").querySelectorAll("li")).sort((a, b) => {
+            return sortAscending === true ? a.dataset.rank - b.dataset.rank : b.dataset.rank - a.dataset.rank;  
+        }).forEach(el => el.parentNode.appendChild(el));
     }
 </script>
 
@@ -25,8 +31,13 @@
             <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId" class="btn btn-primary">Add New Item</a>
         </div>
         <div class="todo-list-hide-action">
-            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onclick="toggleCompletedItems(this)"/>
-            <label class="form-check-label" for="flexSwitchCheckDefault" title="Hide all the completed items in this list">Hide Completed Items</label>
+            <div>
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onclick="toggleCompletedItems(this)"/>
+                <label class="form-check-label" for="flexSwitchCheckDefault" title="Hide all the completed items in this list">Hide Completed Items</label>
+            </div>
+            <div style="text-align: right">
+                <text>Order by Rank </text><a onclick="orderByRank(true)" style="cursor: pointer" title="Sort Todo items by rank Ascending">Asc</a><text>|</text><a onclick="orderByRank(false)" style="cursor: pointer" title="Sort Todo items by rank Descending">Desc</a>
+            </div>
         </div>
     </div>
 
@@ -46,27 +57,26 @@
                     contextualClass = "";
                     break;
             }
+            
+            string itemDescription = $"{item.Title} (Rank {item.Rank})";
 
-            string todoListItemClass = "todo-list-item" + (item.IsDone ? "-completed" : "");
-
-            <li class="list-group-item @todoListItemClass @contextualClass">
+            <li id="@item.TodoItemId" data-is-done="@item.IsDone" data-rank="@item.Rank" class="list-group-item todo-list-item @contextualClass">
 
                 <div class="row">
-
                     <div class="col-md-8">
                         <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
 
                             @if (item.IsDone)
                             {
-                                <s>@item.Title</s>
+                                <s>@itemDescription</s>
                             }
                             else
                             {
-                                <text>@item.Title</text>
+                                <text>@itemDescription</text>
                             }
                         </a>
                     </div>
-
+                    
                     <div class="col-md-4 text-right">
                         <small>
                             @item.ResponsibleParty.UserName
@@ -76,7 +86,6 @@
                         </small>
                     </div>
                 </div>
-
             </li>
         }
     </ul>

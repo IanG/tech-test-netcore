@@ -15,6 +15,10 @@ namespace Todo.Views.TodoItem
             new SelectListItem {Text = "Low", Value = Importance.Low.ToString()},
         };
 
+        public static readonly SelectListItem[] RankSelectListItems = Enumerable.Range(0, 11)
+            .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString()})
+            .ToArray();
+
         public static List<SelectListItem> UserSelectListItems(this ApplicationDbContext dbContext)
         {
             return dbContext.Users.Select(u => new SelectListItem {Text = u.UserName, Value = u.Id}).ToList();

@@ -16,16 +16,19 @@ namespace Todo.Models.TodoItems
         [DisplayName("Assign Task To")]
         public string ResponsiblePartyId { get; set; }
         
+        public int Rank { get; set; }
+        
         public Importance Importance { get; set; }
 
         public TodoItemEditFields() { }
 
-        public TodoItemEditFields(int todoListId, string todoListTitle, int todoItemId, string title, bool isDone, string responsiblePartyId, Importance importance)
+        public TodoItemEditFields(int todoListId, string todoListTitle, int todoItemId, string title, int rank, bool isDone, string responsiblePartyId, Importance importance)
         {
             TodoListId = todoListId;
             TodoListTitle = todoListTitle;
             TodoItemId = todoItemId;
             Title = title;
+            Rank = rank;
             IsDone = isDone;
             ResponsiblePartyId = responsiblePartyId;
             Importance = importance;

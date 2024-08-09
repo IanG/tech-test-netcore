@@ -12,6 +12,8 @@ namespace Todo.Models.TodoItems
         [DisplayName("Assign Task To")]
         public string ResponsiblePartyId { get; set; }
         
+        public int Rank { get; set; }
+        
         public Importance Importance { get; set; } = Importance.Medium;
 
         public TodoItemCreateFields() { }
